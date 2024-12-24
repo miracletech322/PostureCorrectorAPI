@@ -43,41 +43,40 @@ def api_register():
     if request.is_json:
         users = mongo.db.users
         existing_email = users.find_one({'email': request.json['email']})
-        return jsonify({"shit": "shit"})
 
-    #     if existing_email is None:
-    #         # Generate a unique account_id
-    #         account_id = str(uuid.uuid4())
+        if existing_email is None:
+            # Generate a unique account_id
+            account_id = str(uuid.uuid4())
 
-    #         hashpass = bcrypt.hashpw(request.json['password'].encode('utf-8'), bcrypt.gensalt())
-    #         paid_account = request.json.get('paid_account', False)
-    #         account_type = request.json.get('account_type', '').lower()  # Make the account_type lowercase
-    #         employees_number = request.json.get('employees_number', 0) if account_type == 'corporal' else 0
+            hashpass = bcrypt.hashpw(request.json['password'].encode('utf-8'), bcrypt.gensalt())
+            paid_account = request.json.get('paid_account', False)
+            account_type = request.json.get('account_type', '').lower()  # Make the account_type lowercase
+            employees_number = request.json.get('employees_number', 0) if account_type == 'corporal' else 0
 
-    #         # Debugging statements
-    #         print(f"Account Type: {account_type}")
-    #         print(f"Employees Number: {employees_number}")
-    #         print(f"Account Type Check: {'Corporal' if account_type == 'corporal' else 'Not Corporal'}")
+            # Debugging statements
+            print(f"Account Type: {account_type}")
+            print(f"Employees Number: {employees_number}")
+            print(f"Account Type Check: {'Corporal' if account_type == 'corporal' else 'Not Corporal'}")
 
-    #         users.insert_one({
-    #             'account_id': account_id,
-    #             'first_name': request.json['first_name'],
-    #             'last_name': request.json['last_name'],
-    #             'gender': request.json['gender'],
-    #             'email': request.json['email'],
-    #             'password': hashpass,
-    #             'account_type': account_type,
-    #             'paid_account': paid_account,
-    #             'employees_number': employees_number if account_type == 'corporal' else 0,
-    #             'active': 0 if account_type == 'corporal' else None,
-    #             'available': employees_number if account_type == 'corporal' else 0,
-    #             'streak': 1  # Initialize streak to 1
-    #         })
-    #         return jsonify({'message': 'User created successfully', 'account_id': account_id}), 201
+            users.insert_one({
+                'account_id': account_id,
+                'first_name': request.json['first_name'],
+                'last_name': request.json['last_name'],
+                'gender': request.json['gender'],
+                'email': request.json['email'],
+                'password': hashpass,
+                'account_type': account_type,
+                'paid_account': paid_account,
+                'employees_number': employees_number if account_type == 'corporal' else 0,
+                'active': 0 if account_type == 'corporal' else None,
+                'available': employees_number if account_type == 'corporal' else 0,
+                'streak': 1  # Initialize streak to 1
+            })
+            return jsonify({'message': 'User created successfully', 'account_id': account_id}), 201
 
-    #     return jsonify({'error': 'That email already exists!'}), 409
+        return jsonify({'error': 'That email already exists!'}), 409
 
-    # return jsonify({'error': 'Invalid request'}), 400
+    return jsonify({'error': 'Invalid request'}), 400
 
 @app.route('/api/change_password', methods=['PUT'])
 def api_change_password():
